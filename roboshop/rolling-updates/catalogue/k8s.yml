@@ -1,0 +1,40 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: catalogue
+  labels:
+    app: catalogue
+    project: roboshop
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: catalogue
+      project: roboshop
+  template:
+    metadata:
+      labels:
+        app: catalogue
+        project: roboshop
+    spec:
+      containers:
+        - name: catalogue
+          image: rkalluru/d51-catalogue:VERSION
+          ports:
+            - containerPort: 8000
+          env:
+            - name: MONGO_URL
+              value: mongodb://mongodb.db.svc.cluster.local:27017/catalogue
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: catalogue-svc
+spec:
+  selector:
+    app: catalogue
+    project: roboshop
+  ports:
+    - port: 8000
+      targetPort: 8000

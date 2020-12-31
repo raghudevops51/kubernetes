@@ -1,0 +1,16 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: pod02
+spec:
+  containers:
+    - name: nginx
+      image: nginx
+    - name: centos
+      image: centos:7
+      command:
+        - sleep
+        - "10000"
+      ## In kubernetes YAML files, number input from user should be given in quotes
+
+

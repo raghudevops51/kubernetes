@@ -1,0 +1,53 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: pod06
+spec:
+  volumes:
+    - name: configs
+      configMap:
+        name: conf01
+  containers:
+    - name: centos
+      image: centos:7
+      command:
+        - sleep
+        - "10000"
+      volumeMounts:
+        - name: configs
+          mountPath: /etc/config
+      env:
+        - name: URL
+          valueFrom:
+            configMapKeyRef:
+              key: URL
+              name: conf01
+        - name: PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: PASSWORD
+              name: secret01
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: conf01
+data:
+  URL: configmap.google.com
+  config.conf: |
+    #Configure here general information about the environment, such as SonarQube server connection details for example
+    #No information about specific project should appear here
+
+    #----- Default SonarQube server
+    sonar.host.url=http://localhost:9000
+
+    #----- Default source code encoding
+    sonar.sourceEncoding=UTF-8
+
+---
+kind: Secret
+apiVersion: v1
+metadata:
+  name: secret01
+data:
+  PASSWORD: YWRtaW4jMTIz

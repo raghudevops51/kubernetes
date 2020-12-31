@@ -1,0 +1,43 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user
+  labels:
+    app: user
+    project: roboshop
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user
+      project: roboshop
+  template:
+    metadata:
+      labels:
+        app: user
+        project: roboshop
+    spec:
+      containers:
+        - name: catalogue
+          image: rkalluru/d51-user:VERSION
+          ports:
+            - containerPort: 8000
+          env:
+            - name: REDIS_HOST
+              value: redis-master.db.svc.cluster.local
+            - name: MONGO_URL
+              value: mongodb://mongodb.db.svc.cluster.local:27017/users
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: user-svc
+spec:
+  selector:
+    app: user
+    project: roboshop
+  ports:
+    - port: 8000
+      targetPort: 8000

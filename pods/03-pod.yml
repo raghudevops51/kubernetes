@@ -1,0 +1,26 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: pod03
+  labels:
+    app: nginx
+spec:
+  containers:
+    - name: nginx
+      image: nginx
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: pod3-svc
+spec:
+  type: LoadBalancer
+  selector:
+    app: nginx
+  ports:
+    - port: 80
+      targetPort: 80
+
+# In kubernetes, resources attach over labels, So always try to make the labels unique.
+
+

@@ -1,0 +1,42 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shipping
+  labels:
+    app: shipping
+    project: roboshop
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: shipping
+      project: roboshop
+  template:
+    metadata:
+      labels:
+        app: shipping
+        project: roboshop
+    spec:
+      containers:
+        - name: shipping
+          image: rkalluru/d51-shipping:VERSION
+          ports:
+            - containerPort: 8000
+          env:
+            - name: DB_HOST
+              value: mysql.db.svc.cluster.local
+            - name: CART_ENDPOINT
+              value: cart-svc:8000
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: shipping-svc
+spec:
+  selector:
+    app: shipping
+    project: roboshop
+  ports:
+    - port: 8000
+      targetPort: 8000
